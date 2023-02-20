@@ -12,6 +12,12 @@
 
 > Solusinya adalah kita bisa mengirimkan function dari Board ke Square comp. Square akan memanggil fungsi tsb saat square diklik, jadi tambahkan juga fungsi tsb ke props Square comp. (mis, nama function nya adalah onSquareClick)
 
+> Gerakan pertama di set sebagai X secara manual, sekarang mari tambahkan O.
+
+> Buat state baru untuk pergantian simbol (mis, namanya xIsNext dan setXIsNext) dan useState nya boolean bernilai true.
+
+> Di fungsi handleClick buat kondisi jika array squares[i] sudah ada maka tidak bisa diisi lagi. Kemudian edit code squares[i] = 'X' menjadi sebuah kondisi lagi dimana jika xIsNext bernilai true maka i = X dan jika false maka i = O. Setelah itu update nilai nextSquare dan ubah nilai xIsNext menjadi negasinya dengan method setXIsNext(!xIsNext).
+
 > 
 
 */
@@ -36,28 +42,45 @@ export default function Board() {
   // Array(9).fill(null) membuat array dengan sembilan elemen dan men-set masing-masing ke null. useState() untuk mendeklarasikan variabel state squares yg di set kedalam arrray. Setiap entry dalam array akan menjadi nilai dari setiap square
   const [squares, setSquares] = useState(Array(9).fill(null));
 
-  function handleClick() {
+  // Buat state baru untuk membuat pergantian simbol
+  const [xIsNext, setXIsNext] = useState(true);
+
+  function handleClick(i) {
+    // Buat kondisi jika squares sudah berisi maka tidak bisa di isi lagi
+    if(squares[i]) {
+      return;
+    }
+
+    // slice() -> membuat sebuah copy dari array squares dan me-return elemen yang dipilih dalam array sebagai array baru.
     const nextSquares = squares.slice();
-    nextSquares[0] = 'X';
+    // xIsNext bernilai true maka i = X
+    if(xIsNext){
+      nextSquares[i] = 'X';
+    } else {
+      nextSquares[i] = 'O';
+    }
     setSquares(nextSquares);
+    // xIsNext diubah menjadi false maka i selanjutnya = O
+    setXIsNext(!xIsNext);
   }
 
   return (
     <>
       <div className="board-row">
-        <Square value={squares[0]} onSquareClick={handleClick} />
-        <Square value={squares[1]} />
-        <Square value={squares[2]} />
+        {/* Saat square diklik, code setelah => “panah” akan dijalankan, memanggil handleClick(0). */}
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
       </div>
       <div className="board-row">
-        <Square value={squares[3]} />
-        <Square value={squares[4]} />
-        <Square value={squares[5]} />
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
       </div>
       <div className="board-row">
-        <Square value={squares[6]} />
-        <Square value={squares[7]} />
-        <Square value={squares[8]} />
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
     </>
   )
